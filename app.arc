@@ -21,10 +21,6 @@ architecture arm64
 	method post
 	src /api/persist
 
-@static
-folder build
-spa true
-
 @tables
 data
 	category *String
