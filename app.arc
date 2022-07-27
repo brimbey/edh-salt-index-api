@@ -1,25 +1,37 @@
 @app
-edh-salt-index
+commandersalt-api
 
 @aws
 # profile default
-region us-west-2
+region us-east-1
 runtime nodejs16.x
 architecture arm64
 
 @http
-/api/import
+/import
 	method get
 	src /api/import
-/api/card
+/card
 	method get
 	src /api/card
-/api/leaderboard
+/leaderboard
 	method get
 	src /api/leaderboard
-/api/persist
+/persist
 	method post
 	src /api/persist
+/import
+	method options
+	src /api/genericOptionsResponse
+/card
+	method options
+	src /api/genericOptionsResponse
+/leaderboard
+	method options
+	src /api/genericOptionsResponse
+/persist
+	method options
+	src /api/genericOptionsResponse
 
 @tables
 data

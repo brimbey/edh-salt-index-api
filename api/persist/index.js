@@ -65,7 +65,10 @@ exports.handler = async function http (requestObject) {
     return {
       headers: {
         'content-type': 'application/json; charset=utf8',
-        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
+        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'Access-Control-Allow-Headers' : 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
       },
       statusCode: 200,
       body: JSON.stringify(response),
@@ -75,7 +78,10 @@ exports.handler = async function http (requestObject) {
     return {
       headers: {
         'content-type': 'application/json; charset=utf8',
-        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
+        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+        'Access-Control-Allow-Headers' : 'Content-Type',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
       },
       statusCode: 500,
       body: JSON.stringify({ message: error }),
