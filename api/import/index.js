@@ -1,6 +1,6 @@
 // const { parseMoxfield } = require('./parsers/Moxfield');
-const Moxfield = require('./parsers/Moxfield');
-const TappedOut = require('./parsers/Tappedout');
+const Moxfield = require('./parsers/moxfield/Moxfield');
+const TappedOut = require('./parsers/tappedout/TappedOut');
 
 exports.handler = async function http (requestObject) {
   const url = requestObject.queryStringParameters.url;
