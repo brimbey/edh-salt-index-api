@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Exported by architect/package@8.1.3 on 2022-07-26T19:29:47.891Z
+Description: Exported by architect/package@8.1.3 on 2022-08-03T05:22:49.103Z
 Resources:
   Role:
     Type: AWS::IAM::Role
@@ -166,6 +166,23 @@ Resources:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsImportHTTPLambda.Arn}/invocations
                 connectionType: INTERNET
+          /init:
+            get:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetInitHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
+            options:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsInitHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
           /leaderboard:
             get:
               x-amazon-apigateway-integration:
@@ -182,6 +199,23 @@ Resources:
                 httpMethod: POST
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsLeaderboardHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
+          /stats:
+            get:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetStatsHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
+            options:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsStatsHTTPLambda.Arn}/invocations
                 connectionType: INTERNET
           /{proxy+}:
             get:
@@ -226,7 +260,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/7348347e4e3c85cc8c58ad53617d5a66
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/a5c969cd5978b5f22780a58dc5cef730
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -237,7 +271,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -263,7 +297,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/911c2b83d8a5b89400e9423a341043ef
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/9efc3ee1b2fa8da95887083c5a251b2b
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -274,7 +308,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -296,11 +330,11 @@ Resources:
             Method: GET
             ApiId:
               Ref: HTTP
-  GetLeaderboardHTTPLambda:
+  GetInitHTTPLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/b3c886fd69580aeb3f739bbf673d353b
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/886279db6185caeabc72ac827bd44daf
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -311,7 +345,44 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        GetInitHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /init
+            Method: GET
+            ApiId:
+              Ref: HTTP
+  GetLeaderboardHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/cf8ccfacdf0f5812b029e614d84a4bdf
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -333,6 +404,43 @@ Resources:
             Method: GET
             ApiId:
               Ref: HTTP
+  GetStatsHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/01680a07399da54c944b6e1b9180eec1
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        GetStatsHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /stats
+            Method: GET
+            ApiId:
+              Ref: HTTP
   GetCatchallHTTPLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -348,7 +456,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -373,7 +481,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/ec57c27cd662c63a66f08cf147b66f91
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/ab2b7dbcc49bddfb1f687f8388a5e71e
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -384,7 +492,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -421,7 +529,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -458,7 +566,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -480,6 +588,43 @@ Resources:
             Method: OPTIONS
             ApiId:
               Ref: HTTP
+  OptionsInitHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/894937bbfdd36ec98ae4697fb410bc92
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        OptionsInitHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /init
+            Method: OPTIONS
+            ApiId:
+              Ref: HTTP
   OptionsLeaderboardHTTPLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -495,7 +640,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -532,7 +677,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -551,6 +696,43 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /persist
+            Method: OPTIONS
+            ApiId:
+              Ref: HTTP
+  OptionsStatsHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/894937bbfdd36ec98ae4697fb410bc92
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        OptionsStatsHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /stats
             Method: OPTIONS
             ApiId:
               Ref: HTTP
@@ -582,6 +764,12 @@ Resources:
       - IndexName: byId
         KeySchema:
         - AttributeName: id
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+      - IndexName: byStats
+        KeySchema:
+        - AttributeName: category
           KeyType: HASH
         Projection:
           ProjectionType: ALL

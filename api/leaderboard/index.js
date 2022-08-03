@@ -1,11 +1,4 @@
 const arc = require('@architect/functions');
-const cors = require('cors');
-
-// arc.http.cors
-
-const parseBody = arc.http.helpers.bodyParser;
-const AWS = require('aws-sdk');
-// const { APIUtils } = require('../common/APIUtils');
 
 const prettyPrintJSON = (json) => {
   console.log(`${JSON.stringify(json, null, 4)}`);

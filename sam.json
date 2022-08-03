@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Exported by architect/package@8.1.3 on 2022-07-26T19:29:47.891Z",
+  "Description": "Exported by architect/package@8.1.3 on 2022-08-03T05:22:49.103Z",
   "Resources": {
     "Role": {
       "Type": "AWS::IAM::Role",
@@ -282,6 +282,30 @@
                 }
               }
             },
+            "/init": {
+              "get": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetInitHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              },
+              "options": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsInitHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              }
+            },
             "/leaderboard": {
               "get": {
                 "x-amazon-apigateway-integration": {
@@ -301,6 +325,30 @@
                   "httpMethod": "POST",
                   "uri": {
                     "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsLeaderboardHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              }
+            },
+            "/stats": {
+              "get": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetStatsHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              },
+              "options": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsStatsHTTPLambda.Arn}/invocations"
                   },
                   "connectionType": "INTERNET"
                 }
@@ -385,7 +433,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -440,7 +488,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -478,6 +526,61 @@
         }
       }
     },
+    "GetInitHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/init",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "GetInitHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/init",
+              "Method": "GET",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
     "GetLeaderboardHTTPLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -495,7 +598,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -533,6 +636,61 @@
         }
       }
     },
+    "GetStatsHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/stats",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "GetStatsHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/stats",
+              "Method": "GET",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
     "GetCatchallHTTPLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -550,7 +708,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -604,7 +762,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -659,7 +817,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -714,7 +872,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -752,6 +910,61 @@
         }
       }
     },
+    "OptionsInitHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "OptionsInitHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/init",
+              "Method": "OPTIONS",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
     "OptionsLeaderboardHTTPLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -769,7 +982,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -824,7 +1037,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -853,6 +1066,61 @@
             "Type": "HttpApi",
             "Properties": {
               "Path": "/persist",
+              "Method": "OPTIONS",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
+    "OptionsStatsHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "OptionsStatsHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/stats",
               "Method": "OPTIONS",
               "ApiId": {
                 "Ref": "HTTP"
@@ -912,6 +1180,18 @@
             "KeySchema": [
               {
                 "AttributeName": "id",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
+          },
+          {
+            "IndexName": "byStats",
+            "KeySchema": [
+              {
+                "AttributeName": "category",
                 "KeyType": "HASH"
               }
             ],

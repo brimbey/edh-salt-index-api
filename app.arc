@@ -20,6 +20,12 @@ architecture arm64
 /persist
 	method post
 	src /api/persist
+/stats
+	method get
+	src /api/stats
+/init
+	method get
+	src /api/init
 /import
 	method options
 	src /api/genericOptionsResponse
@@ -30,6 +36,12 @@ architecture arm64
 	method options
 	src /api/genericOptionsResponse
 /persist
+	method options
+	src /api/genericOptionsResponse
+/stats
+	method options
+	src /api/genericOptionsResponse
+/init
 	method options
 	src /api/genericOptionsResponse
 
@@ -48,3 +60,7 @@ data
 	category *String
 	id *String
 	name byId
+
+data 
+	category *String
+	name byStats

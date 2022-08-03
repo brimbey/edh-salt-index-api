@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const arc = require('@architect/functions')
 const AWS = require("aws-sdk")
-
+const he = require('he');
 
 const prettyPrintJSON = (json) => {
   console.log(`json value: \n${JSON.stringify(json, null, 4)}`);
@@ -70,12 +70,16 @@ const getEdhrecCardEntry = async (cardname = '') => {
 
 exports.handler = async function http (requestObject) {
   const cardname = requestObject?.queryStringParameters?.card;
-  
+
   if (cardname?.length > 0) {
-    const sanitizedCardName = cardname?.toLowerCase()
-        .replace(/,|'/g, '')
-        .replace(/ /g, '-')
-        .replace(/-\/\/.*/g, '');
+    const sanitizedCardName = he.decode(
+      decodeURIComponent(
+        cardname?.toLowerCase()
+      )
+     ).replace(/,|'/g, '')
+      .replace(/ /g, '-')
+      .replace(/"/g, '')
+      .replace(/-\/\/.*/g, '');
 
     // console.log(`sanitized card name: ${sanitizedCardName}`);
 

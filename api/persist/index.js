@@ -1,7 +1,6 @@
 const CryptoJS = require('crypto-js');
-
 let arc = require('@architect/functions');
-const { _ } = require('core-js');
+
 let parseBody = arc.http.helpers.bodyParser
 
 const prettyPrintJSON = (json) => {
@@ -9,6 +8,24 @@ const prettyPrintJSON = (json) => {
 }
 
 const formatSalt = (value) => Math.ceil(value * 1000) / 1000;
+
+const checkExisting = async (id) => {
+  let tables = await arc.tables()
+  console.log(`...checking for existing deck`);
+    
+  const queryParams = {
+    KeyConditionExpression: 'category = :category AND id = :id',
+    ExpressionAttributeValues: {
+      ':category': 'decks',
+      ':id': id,
+    }
+  }
+  
+  const response = await tables.data.query(queryParams);
+  console.log(`WTF`);
+  prettyPrintJSON(response);
+  return response?.Items?.length > 0;
+}
 
 const persistDeckList = async (body) => {
   console.log(`MD5 HASH => ${CryptoJS.MD5(body?.url)}`);
@@ -34,7 +51,9 @@ const persistDeckList = async (body) => {
     let tables = await arc.tables()
     console.log(`...persisting`);
 
-    prettyPrintJSON(deckData);
+    const isCached = await checkExisting(id);
+    console.log(`isCached: ${isCached}`);
+
     let response = await tables.data.put({
       ...deckData,
     });
@@ -48,8 +67,20 @@ const persistDeckList = async (body) => {
       }
     }
 
-    prettyPrintJSON(`result`);
     prettyPrintJSON(response);
+
+    if (!isCached) {
+      console.log(`...incrementing deck count`);
+
+      await tables.data.update({
+        Key: { "category": "stats", "id": "stats" },
+        ExpressionAttributeValues: { 
+          ":inc": 1,
+        },
+        UpdateExpression: "SET totalCount = totalCount + :inc"
+      })
+    }
+
     return response;
   } catch(error) {
     // do nothing
