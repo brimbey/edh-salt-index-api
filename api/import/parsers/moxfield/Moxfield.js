@@ -1,7 +1,50 @@
 const fetch = require('node-fetch');
+const ImportErrorResponses = require('../../errors/ImportErrorResponses');
 
 const prettyPrintJSON = (json) => {
     console.log(`${JSON.stringify(json, null, 4)}`);
+  }
+
+  const getAuthor = (data) => {
+    return {
+        ...data?.createdByUser,
+        username: data?.createdByUser?.userName,
+        url: `https://www.moxfield.com/users/${data?.createdByUser?.userName}`,
+    }
+  }
+  
+  const getCards = (data) => {
+    return data?.mainboard;
+  }
+
+  const getCommanders = (data) => {
+    return data.commanders;
+  }
+
+  const getMetadata = (data) => {
+    return {
+        url: data?.publicUrl,
+        name: data?.name,
+        source: 'moxfield',
+    }
+  }
+
+  const validate = (status, data) => {
+    if (status !== 200) {
+        throw (ImportErrorResponses.errorStatuses.s404.notFound() );
+    }
+
+    let legal = data?.format === "commander" && data?.mainboardCount === 100;
+
+    if (!legal) {
+        throw (ImportErrorResponses.errorStatuses.s409.wrongSize());
+    } else {
+        Object.keys(data?.mainboard).forEach((cardname) => {
+            if (data.mainboard[cardname].card?.legalities?.commander !== "legal") {
+                throw (ImportErrorResponses.errorStatuses.s409.illegalCard(cardname));
+            }
+        })
+    }
   }
 
 exports.parse = async (url) => {
@@ -14,45 +57,21 @@ exports.parse = async (url) => {
         'maxRedirects': 20,
     };
     
-    let response = await fetch(`https://api.moxfield.com/v2/decks/all/${sha}`, requestOptions);
-    
-    if (response.status !== 200) {
-        throw ({ message: `ERROR: Deck URL invalid, or deck is not publicly visible`, code: 404} );
-    }
-
-    let text = await response.text();
+    const response = await fetch(`https://api.moxfield.com/v2/decks/all/${sha}`, requestOptions);
+    const text = await response.text();
     const json = JSON.parse(text);
     
-    let legal = json?.format === "commander" && json?.mainboardCount === 100;
-    console.log(`legal: ${legal}; format ${json?.format}, count: ${json?.mainboardCount}`);
-
-    if (!legal) {
-        throw ({ message: `ERROR: Deck does not contain exactly 100 cards`, code: 409} );
-    }
-    
-    if (legal) {
-        Object.keys(json?.mainboard).forEach((cardname) => {
-            if (json.mainboard[cardname].card?.legalities?.commander !== "legal") {
-                throw ({ message: `ERROR: Deck contains illegal card: ${cardname}`, code: 409} );
-            }
-        })
-    }
+    validate(response.status, json);
     
     return {
         commanders: {
-            ...json?.commanders,
+            ...getCommanders(json),
         },
         cards: {
-            ...json?.commanders,
-            ...json?.mainboard,
+            ...getCommanders(json),
+            ...getCards(json),
         },
-        author: {
-            ...json?.createdByUser,
-            url: `https://www.moxfield.com/users/${json?.createdByUser?.userName}`,
-        },
-        url: json?.publicUrl,
-        name: json?.name,
-        legal: legal,
-        source: 'moxfield',
+        author: getAuthor(json),
+        ...getMetadata(json),
     }
 }

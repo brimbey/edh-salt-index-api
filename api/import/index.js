@@ -1,4 +1,3 @@
-// const { parseMoxfield } = require('./parsers/Moxfield');
 const Moxfield = require('./parsers/moxfield/Moxfield');
 const TappedOut = require('./parsers/tappedout/TappedOut');
 
@@ -6,6 +5,14 @@ exports.handler = async function http (requestObject) {
   const url = requestObject.queryStringParameters.url;
   
   let deck;
+
+  const headers = {
+    'content-type': 'application/json; charset=utf8',
+    'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
+    'Access-Control-Allow-Headers' : 'Content-Type',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
+  };
 
   try {
     if (url.includes(`moxfield.com`)) {
@@ -16,30 +23,19 @@ exports.handler = async function http (requestObject) {
       throw ({ message: `Invalid source URL supplied`, code: 500} );
     }
   } catch (error) {
-    console.log(JSON.stringify(error));
-    console.log(`ERROR !!! ${error.code} :: ${error.message}`);
+    console.log(`[ERROR]: ${JSON.stringify(error)}`);
+    const statusCode = error?.code || 500;
+    const body = error?.message ? JSON.stringify({ message: error.message }) : `Unexpected service failure`;
 
     return {
-      headers: {
-        'content-type': 'application/json; charset=utf8',
-        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-        'Access-Control-Allow-Headers' : 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
-      },
-      statusCode: error.code,
-      body: JSON.stringify({ message: error.message }),
+      headers,
+      statusCode,
+      body,
     }
   }
 
   return {
-    headers: {
-      'content-type': 'application/json; charset=utf8',
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-      'Access-Control-Allow-Headers' : 'Content-Type',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
-    },
+    headers,
     statusCode: 200,
     body: JSON.stringify({ deck })
   }
