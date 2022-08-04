@@ -25,7 +25,7 @@ const prettyPrintJSON = (json) => {
     return {
         url: data?.publicUrl,
         name: data?.name,
-        source: 'moxfield',
+        source: 'http://www.moxfield.com',
     }
   }
 

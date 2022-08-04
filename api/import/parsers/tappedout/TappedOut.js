@@ -59,7 +59,7 @@ const getMetadata = (data) => {
   return {
       url: ``,
       name: title,
-      source: 'moxfield',
+      source: 'http://www.tappedout.net',
   }
 }
 
