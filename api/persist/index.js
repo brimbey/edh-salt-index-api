@@ -45,7 +45,7 @@ const persistDeckList = async (body) => {
     },
   }
 
-  deckData.data.commanders = deckData.data.commanders.toString();
+  deckData.data.commanders = deckData.data.commanders;
 
   try {
     let tables = await arc.tables()
