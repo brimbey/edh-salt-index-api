@@ -1,8 +1,15 @@
 const Moxfield = require('./parsers/moxfield/Moxfield');
 const TappedOut = require('./parsers/tappedout/TappedOut');
+const Archidekt = require('./parsers/archidekt/Archidekt');
 
 exports.handler = async function http (requestObject) {
   const url = requestObject.queryStringParameters.url;
+  const urlObject = new URL(url);
+  const hostname = urlObject.hostname;
+  const domainName = (hostname.split(`.`).length > 2) ? hostname.replace(/^[^.]+\./g, '') : hostname;
+
+  console.log(`found domainName :: ${domainName}`);
+
   
   let deck;
 
@@ -15,12 +22,18 @@ exports.handler = async function http (requestObject) {
   };
 
   try {
-    if (url.includes(`moxfield.com`)) {
-      deck = await Moxfield.parse(url);
-    } else if (url.includes(`tappedout.net`)) {
-      deck = await TappedOut.parse(url);
-    } else {
-      throw ({ message: `Invalid source URL supplied`, code: 500} );
+    switch (domainName) {
+      case `moxfield.com`:
+        deck = await Moxfield.parse(url);
+        break;
+      case `tappedout.net`:
+        deck = await TappedOut.parse(url);
+        break;
+      case `archidekt.com`:
+        deck = await Archidekt.parse(url);
+        break;
+      default:
+        throw ({ message: `Invalid source URL supplied`, code: 500} );
     }
   } catch (error) {
     console.log(`[ERROR]: ${JSON.stringify(error)}`);
