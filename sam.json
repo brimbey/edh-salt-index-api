@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Exported by architect/package@8.1.3 on 2022-08-05T18:41:42.090Z",
+  "Description": "Exported by architect/package@8.1.3 on 2022-08-08T05:05:11.771Z",
   "Resources": {
     "Role": {
       "Type": "AWS::IAM::Role",
@@ -433,7 +433,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -488,7 +488,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -543,7 +543,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -598,7 +598,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -653,7 +653,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -708,7 +708,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -762,7 +762,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -817,7 +817,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -872,7 +872,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -927,7 +927,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -982,7 +982,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -1037,7 +1037,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -1092,7 +1092,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "staging",
+            "ARC_ENV": "production",
             "ARC_ROLE": {
               "Ref": "Role"
             },

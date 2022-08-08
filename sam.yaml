@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Exported by architect/package@8.1.3 on 2022-08-05T18:41:42.090Z
+Description: Exported by architect/package@8.1.3 on 2022-08-08T05:05:11.771Z
 Resources:
   Role:
     Type: AWS::IAM::Role
@@ -260,7 +260,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/3615ca435d0c7af0fa899a23443de951
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/5e73c713f185e9f4d164ce58845a6929
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -271,7 +271,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -297,7 +297,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/40fa9d4ea7c8dab577e81c3036417c17
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/d4b481dd2f4a85639912e16ffb51bc9c
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -308,7 +308,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -334,7 +334,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/86e881304dc0598c9c983f3e9d513ab5
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/7d91f42885701c81d0621fd4c87c4080
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -345,7 +345,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -371,7 +371,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/f7b505b91badd6c48613b582d8f75ef6
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/1bb2cf3c2d266211ac15fdb2ddc2dbcb
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -382,7 +382,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -408,7 +408,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/827e1dee887e95ca047d4c960d61b80d
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/89011ffc99a6dbc427630d2f9fe9c476
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -419,7 +419,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -456,7 +456,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -481,7 +481,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/ff7dedbb033b76c6e5bb3dc72e3b5632
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/0cb58b49e5c8670c098b1a93177617ac
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -492,7 +492,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -529,7 +529,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -566,7 +566,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -603,7 +603,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -640,7 +640,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -677,7 +677,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -714,7 +714,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: staging
+          ARC_ENV: production
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe

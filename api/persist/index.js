@@ -28,12 +28,10 @@ const checkExisting = async (id) => {
 }
 
 const persistDeckList = async (body) => {
-  console.log(`MD5 HASH => ${CryptoJS.MD5(body?.url)}`);
+  console.log(`...persisting MD5 HASH => ${CryptoJS.MD5(body?.url)}`);
   const id = `${CryptoJS.MD5(body?.url)}`;
   const urlSlug = body?.url?.substring(body?.url?.lastIndexOf(`/`) + 1);
 
-  console.log(`persisting data for decklist ${body.url}; slug: ${urlSlug}`);
-  
   const deckData = {
     category: 'decks',
     id,
@@ -49,11 +47,8 @@ const persistDeckList = async (body) => {
 
   try {
     let tables = await arc.tables()
-    console.log(`...persisting`);
-
     const isCached = await checkExisting(id);
-    console.log(`isCached: ${isCached}`);
-
+  
     let response = await tables.data.put({
       ...deckData,
     });
@@ -70,8 +65,6 @@ const persistDeckList = async (body) => {
     prettyPrintJSON(response);
 
     if (!isCached) {
-      console.log(`...incrementing deck count`);
-
       await tables.data.update({
         Key: { "category": "stats", "id": "stats" },
         ExpressionAttributeValues: { 
@@ -84,7 +77,6 @@ const persistDeckList = async (body) => {
     return response;
   } catch(error) {
     // do nothing
-    console.log(`UNABLE TO SET DATA : ${error}`);
   }
 }
 
