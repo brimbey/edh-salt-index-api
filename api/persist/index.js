@@ -11,7 +11,7 @@ const formatSalt = (value) => Math.ceil(value * 1000) / 1000;
 
 const checkExisting = async (id) => {
   let tables = await arc.tables()
-  console.log(`...checking for existing deck`);
+  // console.log(`...checking for existing deck`);
     
   const queryParams = {
     KeyConditionExpression: 'category = :category AND id = :id',
@@ -22,8 +22,7 @@ const checkExisting = async (id) => {
   }
   
   const response = await tables.data.query(queryParams);
-  console.log(`WTF`);
-  prettyPrintJSON(response);
+  // prettyPrintJSON(response);
   return response?.Items?.length > 0;
 }
 
@@ -36,6 +35,12 @@ const persistDeckList = async (body) => {
     category: 'decks',
     id,
     salt: body.salt,
+    search: {
+      author: body.author.toString().toUpperCase(),
+      title: body.title.toString().toUpperCase(),
+      commanders: body.commanders.toString().toUpperCase(),
+      decksource: body.source.toString().toUpperCase(),
+    },
     data: { 
       ...body, 
       dateLastIndexed: ``,
@@ -62,7 +67,7 @@ const persistDeckList = async (body) => {
       }
     }
 
-    prettyPrintJSON(response);
+    // prettyPrintJSON(response);
 
     if (!isCached) {
       await tables.data.update({

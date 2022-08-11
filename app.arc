@@ -64,3 +64,8 @@ data
 data 
 	category *String
 	name byStats
+
+data 
+	category *String
+	search *Map
+	name bySearch
