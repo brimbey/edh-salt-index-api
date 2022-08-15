@@ -51,7 +51,7 @@ const getSaltList = async (parameters) => {
         id: parameters?.cursor?.id,
         salt: parseFloat(parameters?.cursor?.salt)
       };
-    }
+    } 
 
     if (parameters?.query || parameters?.sources) {
       // queryParams.IndexName = 'bySearch';
@@ -111,6 +111,7 @@ const getSaltList = async (parameters) => {
         ...deck.data,
         id: deck.id,
         salt: formatSalt(deck.data.salt),
+        commanders: deck.data?.commanders?.toString()?.replace(/(?<=[a-zA-Z]),(?=[a-zA-Z])/, `\n`),
       })),
     }));
   } catch (error) {

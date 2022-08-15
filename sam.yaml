@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Exported by architect/package@8.1.3 on 2022-08-11T23:49:28.956Z
+Description: Exported by architect/package@8.1.3 on 2022-08-15T05:37:30.089Z
 Resources:
   Role:
     Type: AWS::IAM::Role
@@ -260,7 +260,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/8b1eac7dcd453ceee4e2c5ea5a2b4143
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/b21b0760c721cbe252ea3011d5f0d4bd
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -297,7 +297,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/b8750e6d2f89b1fa6259a66ae9b589f2
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/afff1da13ae96d20faa162cd19e06bb0
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -334,7 +334,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/dbf321e1ec819b56291aa5b5b76bdd4f
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/07bff6ed39ecc7382f8461280024d2d9
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -371,7 +371,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/cbfa0c506ce49e1a4d5d44b0e09d29d8
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/6ef37c0eed0c1e07992189f68f0febc1
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -408,7 +408,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/ab61c6b78826c63c585c3eda3b0c4efc
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/2e60412bb56c28284d5ea9baee7b53cf
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -481,7 +481,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/252d81afe5b6fa756dacae1c2604751d
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/e9bf9db5e26fb5bb417b410615e59ab4
       Runtime: nodejs16.x
       Architectures:
       - arm64
