@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Exported by architect/package@8.1.3 on 2022-08-15T05:37:30.089Z",
+  "Description": "Exported by architect/package@8.1.3 on 2022-08-16T16:24:24.189Z",
   "Resources": {
     "Role": {
       "Type": "AWS::IAM::Role",
@@ -114,6 +114,25 @@
                 }
               ]
             }
+          },
+          {
+            "PolicyName": "ArcSimpleNotificationServicePolicy",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sns:Publish"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": [
+                      "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}*",
+                      {}
+                    ]
+                  }
+                }
+              ]
+            }
           }
         ]
       }
@@ -132,6 +151,23 @@
         },
         "Value": {
           "Ref": "DataTable"
+        }
+      }
+    },
+    "UpdateCommanderEventTopicParam": {
+      "Type": "AWS::SSM::Parameter",
+      "Properties": {
+        "Type": "String",
+        "Name": {
+          "Fn::Sub": [
+            "/${AWS::StackName}/events/${event}",
+            {
+              "event": "updateCommander"
+            }
+          ]
+        },
+        "Value": {
+          "Ref": "UpdateCommanderEventTopic"
         }
       }
     },
@@ -420,7 +456,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/card",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/card",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -433,7 +469,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -475,7 +511,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/import",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/import",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -488,7 +524,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -530,7 +566,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/init",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/init",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -543,7 +579,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -585,7 +621,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/leaderboard",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/leaderboard",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -598,7 +634,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -640,7 +676,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/stats",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/stats",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -653,7 +689,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -708,7 +744,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -749,7 +785,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/persist",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/persist",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -762,7 +798,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -804,7 +840,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -817,7 +853,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -859,7 +895,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -872,7 +908,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -914,7 +950,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -927,7 +963,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -969,7 +1005,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -982,7 +1018,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -1024,7 +1060,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -1037,7 +1073,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -1079,7 +1115,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/api/genericOptionsResponse",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -1092,7 +1128,7 @@
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
-            "ARC_ENV": "production",
+            "ARC_ENV": "staging",
             "ARC_ROLE": {
               "Ref": "Role"
             },
@@ -1210,8 +1246,79 @@
             "Projection": {
               "ProjectionType": "ALL"
             }
+          },
+          {
+            "IndexName": "byCommanderHashId",
+            "KeySchema": [
+              {
+                "AttributeName": "category",
+                "KeyType": "HASH"
+              }
+            ],
+            "Projection": {
+              "ProjectionType": "ALL"
+            }
           }
         ]
+      }
+    },
+    "UpdateCommanderEventLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/events/updateCommander",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            }
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "UpdateCommanderEvent": {
+            "Type": "SNS",
+            "Properties": {
+              "Topic": {
+                "Ref": "UpdateCommanderEventTopic"
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateCommanderEventTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "DisplayName": "UpdateCommander",
+        "Subscription": []
       }
     },
     "StaticBucket": {
@@ -1282,6 +1389,12 @@
       "Description": "API ID (ApiId)",
       "Value": {
         "Ref": "HTTP"
+      }
+    },
+    "UpdateCommanderEventTopic": {
+      "Description": "An SNS Topic",
+      "Value": {
+        "Ref": "UpdateCommanderEventTopic"
       }
     },
     "BucketURL": {

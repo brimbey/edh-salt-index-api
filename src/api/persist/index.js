@@ -34,12 +34,13 @@ const persistDeckList = async (body) => {
   const deckData = {
     category: 'decks',
     id,
-    salt: body.salt,
+    salt: body?.salt,
+    commanderHashId: `${CryptoJS.MD5(body?.commanders?.toString().toUpperCase())}`,
     search: {
-      author: body.author.toString().toUpperCase(),
-      title: body.title.toString().toUpperCase(),
-      commanders: body.commanders.toString().toUpperCase(),
-      decksource: body.source.toString().toUpperCase(),
+      author: body?.author?.toString()?.toUpperCase(),
+      title: body?.title?.toString()?.toUpperCase(),
+      commanders: body?.commanders?.toString()?.toUpperCase(),
+      decksource: body?.source?.toString()?.toUpperCase(),
     },
     data: { 
       ...body, 
@@ -68,6 +69,17 @@ const persistDeckList = async (body) => {
     }
 
     // prettyPrintJSON(response);
+
+    arc.events.publish({
+      name: 'updateCommander',
+      payload: { 
+        commanderHashId: response?.commanderHashId,
+        deckId: response?.id,
+        salt: response?.salt,
+        operation: isCached ? `update` : `create`,
+        commanders: response.data.commanders,
+      }
+    })    
 
     if (!isCached) {
       await tables.data.update({

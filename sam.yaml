@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Exported by architect/package@8.1.3 on 2022-08-15T05:37:30.089Z
+Description: Exported by architect/package@8.1.3 on 2022-08-16T16:24:24.189Z
 Resources:
   Role:
     Type: AWS::IAM::Role
@@ -60,6 +60,16 @@ Resources:
             Action: dynamodb:DeleteTable
             Resource:
               Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*
+      - PolicyName: ArcSimpleNotificationServicePolicy
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - sns:Publish
+            Resource:
+              Fn::Sub:
+              - arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${AWS::StackName}*
+              - {}
   DataParam:
     Type: AWS::SSM::Parameter
     Properties:
@@ -70,6 +80,16 @@ Resources:
         - tablename: data
       Value:
         Ref: DataTable
+  UpdateCommanderEventTopicParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Name:
+        Fn::Sub:
+        - /${AWS::StackName}/events/${event}
+        - event: updateCommander
+      Value:
+        Ref: UpdateCommanderEventTopic
   StaticBucketParam:
     Type: AWS::SSM::Parameter
     Properties:
@@ -260,7 +280,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/b21b0760c721cbe252ea3011d5f0d4bd
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/236df38ccbd121fb284d5d8796fa7991
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -271,7 +291,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -297,7 +317,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/afff1da13ae96d20faa162cd19e06bb0
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/083d710e90b1dbb66f60551dfa6b915e
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -308,7 +328,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -334,7 +354,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/07bff6ed39ecc7382f8461280024d2d9
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/fcca466ce50e021f3ff50d6ed08f61c7
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -345,7 +365,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -371,7 +391,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/6ef37c0eed0c1e07992189f68f0febc1
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/022e56186c2af52fd08897261ff7b4a6
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -382,7 +402,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -408,7 +428,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/2e60412bb56c28284d5ea9baee7b53cf
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/81a0d31020cab9568fe3d041a37f674a
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -419,7 +439,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -456,7 +476,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -481,7 +501,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/e9bf9db5e26fb5bb417b410615e59ab4
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/0bb80d8a81c996a48f010aa390fe8ce9
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -492,7 +512,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -529,7 +549,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -566,7 +586,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -603,7 +623,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -640,7 +660,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -677,7 +697,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -714,7 +734,7 @@ Resources:
       Environment:
         Variables:
           ARC_APP_NAME: commandersalt-api
-          ARC_ENV: production
+          ARC_ENV: staging
           ARC_ROLE:
             Ref: Role
           ARC_SESSION_TABLE_NAME: jwe
@@ -779,6 +799,51 @@ Resources:
           KeyType: HASH
         Projection:
           ProjectionType: ALL
+      - IndexName: byCommanderHashId
+        KeySchema:
+        - AttributeName: category
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+  UpdateCommanderEventLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/2c9887adb7dc50059d383d8a15c1c67c
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        UpdateCommanderEvent:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: UpdateCommanderEventTopic
+  UpdateCommanderEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: UpdateCommander
+      Subscription: []
   StaticBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -818,6 +883,10 @@ Outputs:
     Description: API ID (ApiId)
     Value:
       Ref: HTTP
+  UpdateCommanderEventTopic:
+    Description: An SNS Topic
+    Value:
+      Ref: UpdateCommanderEventTopic
   BucketURL:
     Description: Bucket URL
     Value:

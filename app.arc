@@ -10,40 +10,40 @@ architecture arm64
 @http
 /import
 	method get
-	src /api/import
+	src src/api/import
 /card
 	method get
-	src /api/card
+	src src/api/card
 /leaderboard
 	method get
-	src /api/leaderboard
+	src src/api/leaderboard
 /persist
 	method post
-	src /api/persist
+	src src/api/persist
 /stats
 	method get
-	src /api/stats
+	src src/api/stats
 /init
 	method get
-	src /api/init
+	src src/api/init
 /import
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 /card
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 /leaderboard
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 /persist
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 /stats
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 /init
 	method options
-	src /api/genericOptionsResponse
+	src src/api/genericOptionsResponse
 
 @tables
 data
@@ -69,3 +69,12 @@ data
 	category *String
 	search *Map
 	name bySearch
+
+data
+	category *String
+	name byCommanderHashId
+
+@events
+updateCommander
+	src src/events/updateCommander
+
