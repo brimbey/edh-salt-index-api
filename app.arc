@@ -17,6 +17,9 @@ architecture arm64
 /leaderboard
 	method get
 	src src/api/leaderboard
+/commanders
+	method get
+	src src/api/commanders
 /persist
 	method post
 	src src/api/persist
@@ -33,6 +36,9 @@ architecture arm64
 	method options
 	src src/api/genericOptionsResponse
 /leaderboard
+	method options
+	src src/api/genericOptionsResponse
+/commanders
 	method options
 	src src/api/genericOptionsResponse
 /persist
@@ -75,6 +81,6 @@ data
 	name byCommanderHashId
 
 @events
-updateCommander
-	src src/events/updateCommander
+ingest
+	src src/events/ingest
 

@@ -71,7 +71,7 @@ const persistDeckList = async (body) => {
     // prettyPrintJSON(response);
 
     arc.events.publish({
-      name: 'updateCommander',
+      name: 'ingest',
       payload: { 
         commanderHashId: response?.commanderHashId,
         deckId: response?.id,

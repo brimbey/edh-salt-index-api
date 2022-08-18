@@ -2,6 +2,8 @@ const Moxfield = require('./parsers/moxfield/Moxfield');
 const TappedOut = require('./parsers/tappedout/TappedOut');
 const Archidekt = require('./parsers/archidekt/Archidekt');
 const Manabox = require('./parsers/manabox/Manabox');
+const Cards = require('./parsers/cards/Cards');
+const Decks = require('../../persist/decks/Decks');
 
 const CryptoJS = require('crypto-js');
 let arc = require('@architect/functions');
@@ -23,7 +25,7 @@ const checkExisting = async (id) => {
   }
   
   const response = await tables.data.query(queryParams);
-  prettyPrintJSON(response);
+  //prettyPrintJSON(response);
   return response?.Items?.length > 0;
 }
 
@@ -69,6 +71,74 @@ const checkAndDeleteDeck = async (url) => {
   }
 }
 
+const fetchCardInList = async (name, finishedCallback) => {
+  try {
+    const card = await Cards.getCard(name);
+
+    if (card) {
+      // prettyPrintJSON(card);
+      finishedCallback(card);
+    }
+  } catch (error) {
+      console.log(`failed to get ${name} ${error}`);
+      finishedCallback({})
+  }
+};
+
+const buildDeckData = async (url, domainName) => {
+  let deck;
+
+  switch (domainName) {
+    case `moxfield.com`:
+      deck = await Moxfield.parse(url);
+      break;
+    case `tappedout.net`:
+      deck = await TappedOut.parse(url);
+      break;
+    case `archidekt.com`:
+      deck = await Archidekt.parse(url);
+      break;
+    case `manabox.app`:
+      deck = await Manabox.parse(url);
+      break;
+    default:
+      throw ({ message: `Invalid source URL supplied`, code: 500} );
+  }
+
+  let cards = [];
+  let salt = 0.00;
+
+  // prettyPrintJSON(deck);
+  const names = Object.keys(deck?.cards);
+
+  const deckData = {
+    commanders: Object.keys(deck?.commanders), //getCommanders(body),
+    cards: Object.keys(deck?.cards), //
+    author: deck.author,
+    url: deck.url,
+    name: deck.name,
+    title: deck.name,
+    source: deck.source,
+    salt: 0,
+  };
+
+  const fetchFinishedHandler = async (card) => {
+    deckData.salt = deckData.salt + parseFloat(card?.salt);
+  }
+
+  const promises = [];
+  for (let i = 0; i < deckData?.cards?.length; i++) {
+    const name = deckData?.cards?.[i];
+
+    promises.push(fetchCardInList(name, fetchFinishedHandler));
+  }
+
+  await Promise.all(promises);
+  const finalData = await Decks.ingest(deckData);
+
+  return finalData;
+};
+
 exports.handler = async function http (requestObject) {
   const url = requestObject.queryStringParameters.url;
   const urlObject = new URL(url);
@@ -77,9 +147,7 @@ exports.handler = async function http (requestObject) {
 
   console.log(`found domainName :: ${domainName}`);
 
-  
   let deck;
-
   const headers = {
     'content-type': 'application/json; charset=utf8',
     'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
@@ -89,22 +157,7 @@ exports.handler = async function http (requestObject) {
   };
 
   try {
-    switch (domainName) {
-      case `moxfield.com`:
-        deck = await Moxfield.parse(url);
-        break;
-      case `tappedout.net`:
-        deck = await TappedOut.parse(url);
-        break;
-      case `archidekt.com`:
-        deck = await Archidekt.parse(url);
-        break;
-      case `manabox.app`:
-        deck = await Manabox.parse(url);
-        break;
-      default:
-        throw ({ message: `Invalid source URL supplied`, code: 500} );
-    }
+    deck = await buildDeckData(url, domainName);
   } catch (error) {
     console.log(`[ERROR]: ${JSON.stringify(error)}`);
     const statusCode = error?.code || 500;
@@ -124,7 +177,7 @@ exports.handler = async function http (requestObject) {
   return {
     headers,
     statusCode: 200,
-    body: JSON.stringify({ deck })
+    body: JSON.stringify({deck })
   }
 }
 

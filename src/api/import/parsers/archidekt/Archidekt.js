@@ -74,7 +74,7 @@ exports.parse = async (url) => {
     console.log(`url :: ${url}`);
     const regex = /(?<=decks\/).*/;
     const match = regex.exec(url);
-    prettyPrintJSON(match);
+    // prettyPrintJSON(match);
     const id = match[0];
     
     const requestOptions = {

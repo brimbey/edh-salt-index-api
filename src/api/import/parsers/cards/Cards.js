@@ -9,7 +9,7 @@ const prettyPrintJSON = (json) => {
 
 function fart (data) {
   console.log(`GOT sfs :: `);
-  // prettyPrintJSON(data);
+  prettyPrintJSON(data);
 }
 
 
@@ -29,13 +29,16 @@ const getEdhrecCardEntry = async (cardname = '') => {
     
     const response = await tables.data.query(queryParams);
     
-    cached = response.Items[0];
+    if (response.Count > 0) {
+      // prettyPrintJSON(response);
+      return response.Items[0];
+    }
   } catch (error) {
-    console.log(`UNABLE TO GET DATA : ${error}`);
+    //
   }
 
-  if (!cached?.salt) {
-    console.log(`NOT CACHED :: ${cardname}`);
+  if (!cached) {
+    // console.log(`NOT CACHED :: ${cardname}`);
     const requestOptions = {
       'method': 'GET',
       'hostname': 'cards.edhrec.com',
@@ -61,17 +64,16 @@ const getEdhrecCardEntry = async (cardname = '') => {
       console.log(`UNABLE TO SET DATA : ${error}`);
     }
   }
-  
-  return {
-    ...cached,
-  }
-  
+
+  return null;
 }
 
-exports.handler = async function http (requestObject) {
-  const cardname = requestObject?.queryStringParameters?.card;
-
-  if (cardname?.length > 0) {
+exports.getCard = async (cardname) => {
+  try {
+    if (cardname?.length < 1) {
+      throw ({ message: `Can't find card`, code: 404} );
+    }
+  
     const sanitizedCardName = he.decode(
       decodeURIComponent(
         cardname?.toLowerCase()
@@ -81,33 +83,9 @@ exports.handler = async function http (requestObject) {
       .replace(/"/g, '')
       .replace(/-\/\/.*/g, '');
 
-    // console.log(`sanitized card name: ${sanitizedCardName}`);
-
-    const card = await getEdhrecCardEntry(sanitizedCardName);
-
-    return {
-      headers: {
-        'content-type': 'application/json; charset=utf8',
-        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-        'Access-Control-Allow-Headers' : 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
-      },
-      statusCode: 200,
-      body: JSON.stringify({...card})
-    }
-  } else {
-    return {
-      headers: {
-        'content-type': 'application/json; charset=utf8',
-        'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0',
-        'Access-Control-Allow-Headers' : 'Content-Type',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT'
-      },
-      statusCode: 404,
-      body: JSON.stringify({ message: `not found` }),
-    }
+    return await getEdhrecCardEntry(sanitizedCardName);
+  } catch (error) {
+      console.log(`[ERROR] import - can't get card ${cardname}: ${JSON.stringify(error)}`);
   }
 }
 

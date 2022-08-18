@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Exported by architect/package@8.1.3 on 2022-08-16T16:24:24.189Z",
+  "Description": "Exported by architect/package@8.1.3 on 2022-08-18T21:26:33.478Z",
   "Resources": {
     "Role": {
       "Type": "AWS::IAM::Role",
@@ -154,7 +154,7 @@
         }
       }
     },
-    "UpdateCommanderEventTopicParam": {
+    "IngestEventTopicParam": {
       "Type": "AWS::SSM::Parameter",
       "Properties": {
         "Type": "String",
@@ -162,12 +162,12 @@
           "Fn::Sub": [
             "/${AWS::StackName}/events/${event}",
             {
-              "event": "updateCommander"
+              "event": "ingest"
             }
           ]
         },
         "Value": {
-          "Ref": "UpdateCommanderEventTopic"
+          "Ref": "IngestEventTopic"
         }
       }
     },
@@ -289,6 +289,30 @@
                   "httpMethod": "POST",
                   "uri": {
                     "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsCardHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              }
+            },
+            "/commanders": {
+              "get": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetCommandersHTTPLambda.Arn}/invocations"
+                  },
+                  "connectionType": "INTERNET"
+                }
+              },
+              "options": {
+                "x-amazon-apigateway-integration": {
+                  "payloadFormatVersion": "2.0",
+                  "type": "aws_proxy",
+                  "httpMethod": "POST",
+                  "uri": {
+                    "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsCommandersHTTPLambda.Arn}/invocations"
                   },
                   "connectionType": "INTERNET"
                 }
@@ -498,6 +522,61 @@
             "Type": "HttpApi",
             "Properties": {
               "Path": "/card",
+              "Method": "GET",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GetCommandersHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/commanders",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "GetCommandersHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/commanders",
               "Method": "GET",
               "ApiId": {
                 "Ref": "HTTP"
@@ -891,6 +970,61 @@
         }
       }
     },
+    "OptionsCommandersHTTPLambda": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/api/genericOptionsResponse",
+        "Runtime": "nodejs16.x",
+        "Architectures": [
+          "arm64"
+        ],
+        "MemorySize": 1152,
+        "EphemeralStorage": {
+          "Size": 512
+        },
+        "Timeout": 5,
+        "Environment": {
+          "Variables": {
+            "ARC_APP_NAME": "commandersalt-api",
+            "ARC_ENV": "staging",
+            "ARC_ROLE": {
+              "Ref": "Role"
+            },
+            "ARC_SESSION_TABLE_NAME": "jwe",
+            "ARC_STACK_NAME": {
+              "Ref": "AWS::StackName"
+            },
+            "ARC_STATIC_BUCKET": {
+              "Ref": "StaticBucket"
+            },
+            "ARC_STATIC_SPA": false
+          }
+        },
+        "Role": {
+          "Fn::Sub": [
+            "arn:aws:iam::${AWS::AccountId}:role/${roleName}",
+            {
+              "roleName": {
+                "Ref": "Role"
+              }
+            }
+          ]
+        },
+        "Events": {
+          "OptionsCommandersHTTPEvent": {
+            "Type": "HttpApi",
+            "Properties": {
+              "Path": "/commanders",
+              "Method": "OPTIONS",
+              "ApiId": {
+                "Ref": "HTTP"
+              }
+            }
+          }
+        }
+      }
+    },
     "OptionsImportHTTPLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
@@ -1262,11 +1396,11 @@
         ]
       }
     },
-    "UpdateCommanderEventLambda": {
+    "IngestEventLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "index.handler",
-        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/events/updateCommander",
+        "CodeUri": "/Users/brimbey/github/edh-salt-index-api.git/src/events/ingest",
         "Runtime": "nodejs16.x",
         "Architectures": [
           "arm64"
@@ -1303,21 +1437,21 @@
           ]
         },
         "Events": {
-          "UpdateCommanderEvent": {
+          "IngestEvent": {
             "Type": "SNS",
             "Properties": {
               "Topic": {
-                "Ref": "UpdateCommanderEventTopic"
+                "Ref": "IngestEventTopic"
               }
             }
           }
         }
       }
     },
-    "UpdateCommanderEventTopic": {
+    "IngestEventTopic": {
       "Type": "AWS::SNS::Topic",
       "Properties": {
-        "DisplayName": "UpdateCommander",
+        "DisplayName": "Ingest",
         "Subscription": []
       }
     },
@@ -1391,10 +1525,10 @@
         "Ref": "HTTP"
       }
     },
-    "UpdateCommanderEventTopic": {
+    "IngestEventTopic": {
       "Description": "An SNS Topic",
       "Value": {
-        "Ref": "UpdateCommanderEventTopic"
+        "Ref": "IngestEventTopic"
       }
     },
     "BucketURL": {

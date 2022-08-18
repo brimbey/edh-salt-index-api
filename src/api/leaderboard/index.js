@@ -100,19 +100,19 @@ const getSaltList = async (parameters) => {
 
     // prettyPrintJSON(queryParams);
 
-    const results = await tables.data.query(queryParams);
+    // const results = await tables.data.query(queryParams);
 
     // prettyPrintJSON(results);
 
     return await tables.data.query(queryParams).then((data) => ({
       count: data.Count,
-      lastEvaluatedKey: data.LastEvaluatedKey,
       items: data.Items.map((deck) => ({
-        ...deck.data,
-        id: deck.id,
-        salt: formatSalt(deck.data.salt),
-        commanders: deck.data?.commanders?.toString()?.replace(/(?<=[a-zA-Z]),(?=[a-zA-Z])/, `\n`),
+        // salt: formatSalt(deck.data.salt),
+        ...deck,
+        commanders: deck.commanders?.toString()?.replace(/(?<=[a-zA-Z]),(?=[a-zA-Z])/, `\n`),
+        search: {},
       })),
+      lastEvaluatedKey: data.LastEvaluatedKey,
     }));
   } catch (error) {
     console.log(`UNABLE TO GET DATA : ${error}`);

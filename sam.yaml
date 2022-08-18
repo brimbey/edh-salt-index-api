@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Exported by architect/package@8.1.3 on 2022-08-16T16:24:24.189Z
+Description: Exported by architect/package@8.1.3 on 2022-08-18T21:26:33.478Z
 Resources:
   Role:
     Type: AWS::IAM::Role
@@ -80,16 +80,16 @@ Resources:
         - tablename: data
       Value:
         Ref: DataTable
-  UpdateCommanderEventTopicParam:
+  IngestEventTopicParam:
     Type: AWS::SSM::Parameter
     Properties:
       Type: String
       Name:
         Fn::Sub:
         - /${AWS::StackName}/events/${event}
-        - event: updateCommander
+        - event: ingest
       Value:
-        Ref: UpdateCommanderEventTopic
+        Ref: IngestEventTopic
   StaticBucketParam:
     Type: AWS::SSM::Parameter
     Properties:
@@ -168,6 +168,23 @@ Resources:
                 httpMethod: POST
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsCardHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
+          /commanders:
+            get:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetCommandersHTTPLambda.Arn}/invocations
+                connectionType: INTERNET
+            options:
+              x-amazon-apigateway-integration:
+                payloadFormatVersion: '2.0'
+                type: aws_proxy
+                httpMethod: POST
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OptionsCommandersHTTPLambda.Arn}/invocations
                 connectionType: INTERNET
           /import:
             get:
@@ -280,7 +297,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/236df38ccbd121fb284d5d8796fa7991
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/4425b14a023cfff1b2155595241bfb43
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -313,11 +330,48 @@ Resources:
             Method: GET
             ApiId:
               Ref: HTTP
+  GetCommandersHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/d96a08a46759ced0134ae0d41d525b8c
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        GetCommandersHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /commanders
+            Method: GET
+            ApiId:
+              Ref: HTTP
   GetImportHTTPLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/083d710e90b1dbb66f60551dfa6b915e
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/a2c0e3b9f5fedbe0937c3752b99a8aa8
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -354,7 +408,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/fcca466ce50e021f3ff50d6ed08f61c7
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/d99a5951eeaf139d20483344bd1fed84
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -391,7 +445,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/022e56186c2af52fd08897261ff7b4a6
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/566c4a56c3d589b057eddb4ff8a9b235
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -428,7 +482,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/81a0d31020cab9568fe3d041a37f674a
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/72b7e2d3d76d53593f31545999204b6b
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -501,7 +555,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/0bb80d8a81c996a48f010aa390fe8ce9
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/201a67091f880f695bcef068d1ed9d0d
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -568,6 +622,43 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /card
+            Method: OPTIONS
+            ApiId:
+              Ref: HTTP
+  OptionsCommandersHTTPLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/894937bbfdd36ec98ae4697fb410bc92
+      Runtime: nodejs16.x
+      Architectures:
+      - arm64
+      MemorySize: 1152
+      EphemeralStorage:
+        Size: 512
+      Timeout: 5
+      Environment:
+        Variables:
+          ARC_APP_NAME: commandersalt-api
+          ARC_ENV: staging
+          ARC_ROLE:
+            Ref: Role
+          ARC_SESSION_TABLE_NAME: jwe
+          ARC_STACK_NAME:
+            Ref: AWS::StackName
+          ARC_STATIC_BUCKET:
+            Ref: StaticBucket
+          ARC_STATIC_SPA: false
+      Role:
+        Fn::Sub:
+        - arn:aws:iam::${AWS::AccountId}:role/${roleName}
+        - roleName:
+            Ref: Role
+      Events:
+        OptionsCommandersHTTPEvent:
+          Type: HttpApi
+          Properties:
+            Path: /commanders
             Method: OPTIONS
             ApiId:
               Ref: HTTP
@@ -805,11 +896,11 @@ Resources:
           KeyType: HASH
         Projection:
           ProjectionType: ALL
-  UpdateCommanderEventLambda:
+  IngestEventLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      CodeUri: s3://commandersalt-api-cfn-deployments-71882/2c9887adb7dc50059d383d8a15c1c67c
+      CodeUri: s3://commandersalt-api-cfn-deployments-71882/1b4f31ac00b3e31112e72296efd657fe
       Runtime: nodejs16.x
       Architectures:
       - arm64
@@ -834,15 +925,15 @@ Resources:
         - roleName:
             Ref: Role
       Events:
-        UpdateCommanderEvent:
+        IngestEvent:
           Type: SNS
           Properties:
             Topic:
-              Ref: UpdateCommanderEventTopic
-  UpdateCommanderEventTopic:
+              Ref: IngestEventTopic
+  IngestEventTopic:
     Type: AWS::SNS::Topic
     Properties:
-      DisplayName: UpdateCommander
+      DisplayName: Ingest
       Subscription: []
   StaticBucket:
     Type: AWS::S3::Bucket
@@ -883,10 +974,10 @@ Outputs:
     Description: API ID (ApiId)
     Value:
       Ref: HTTP
-  UpdateCommanderEventTopic:
+  IngestEventTopic:
     Description: An SNS Topic
     Value:
-      Ref: UpdateCommanderEventTopic
+      Ref: IngestEventTopic
   BucketURL:
     Description: Bucket URL
     Value:
