@@ -3,7 +3,7 @@ const TappedOut = require('./parsers/tappedout/TappedOut');
 const Archidekt = require('./parsers/archidekt/Archidekt');
 const Manabox = require('./parsers/manabox/Manabox');
 const Cards = require('./parsers/cards/Cards');
-const Decks = require('../../persist/decks/Decks');
+const Decks = require('./decks/Decks');
 
 const CryptoJS = require('crypto-js');
 let arc = require('@architect/functions');
@@ -123,7 +123,9 @@ const buildDeckData = async (url, domainName) => {
   };
 
   const fetchFinishedHandler = async (card) => {
-    deckData.salt = deckData.salt + parseFloat(card?.salt);
+    if (card?.salt && card?.salt > 0) {
+      deckData.salt = deckData.salt + parseFloat(card?.salt);
+    }
   }
 
   const promises = [];

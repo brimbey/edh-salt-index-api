@@ -3,8 +3,8 @@ let arc = require('@architect/functions');
 
 let parsedeck = arc.http.helpers.deckParser
 
-const prettyPrintJSON = (json) => {
-  console.log(`json value: \n${JSON.stringify(json, null, 4)}`);
+const prettyPrintJSON = (json, logType = 'INFO') => {
+    console.log(`[Import.Decks][${logType}]: \n${JSON.stringify(json, null, 4)}`);
 }
 
 const formatSalt = (value) => Math.ceil(value * 1000) / 1000;
@@ -38,6 +38,7 @@ const persistDeckList = async (deck) => {
         category: 'decks',
         id,
         commanderHashId: `${CryptoJS.MD5(deck?.commanders?.toString().toUpperCase())}`,
+        authorHashId: `${CryptoJS.MD5(deck?.author?.url?.toString().toUpperCase())}`,
         search: {
             author: deck?.author?.userName?.toString()?.toUpperCase(),
             title: deck?.title?.toString()?.toUpperCase(),
@@ -46,7 +47,8 @@ const persistDeckList = async (deck) => {
         },
     }
 
-    // prettyPrintJSON(deckData);
+    console.log(`[Import.Decks] ...finalized data to store:`);
+    prettyPrintJSON(deckData);
 
     const tables = await arc.tables()
     const isCached = await checkExisting(id);
@@ -55,15 +57,8 @@ const persistDeckList = async (deck) => {
         ...deckData,
     });
 
-    if (!isCached) {
-        await tables.data.update({
-        Key: { "category": "stats", "id": "stats" },
-        ExpressionAttributeValues: { 
-            ":inc": 1,
-        },
-        UpdateExpression: "SET totalCount = totalCount + :inc"
-        })
-    }
+    console.log(`[Import.Decks] ...dynamodb response:`);
+    prettyPrintJSON(response);
 
     arc.events.publish({
         name: 'ingest',
@@ -83,6 +78,6 @@ exports.ingest = async (deck) => {
     try {
        return await persistDeckList(deck);
     } catch (error) {
-        console.log(`[ERROR] - ingest queue update for decks failed: ${JSON.stringify(error)}`);
+        prettyPrintJSON(error, 'ERROR');
     }
 }

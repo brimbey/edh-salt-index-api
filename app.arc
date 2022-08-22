@@ -6,6 +6,7 @@ commandersalt-api
 region us-east-1
 runtime nodejs16.x
 architecture arm64
+timeout 60
 
 @http
 /import

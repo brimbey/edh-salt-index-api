@@ -1,5 +1,5 @@
 const arc = require('@architect/functions');
-const cors = require('cors');
+// const cors = require('cors');
 
 // arc.http.cors
 

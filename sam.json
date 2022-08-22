@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
-  "Description": "Exported by architect/package@8.1.3 on 2022-08-18T21:26:33.478Z",
+  "Description": "Exported by architect/package@8.1.3 on 2022-08-22T05:10:23.841Z",
   "Resources": {
     "Role": {
       "Type": "AWS::IAM::Role",
@@ -489,7 +489,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -544,7 +544,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -599,7 +599,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -654,7 +654,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -709,7 +709,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -764,7 +764,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -873,7 +873,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -928,7 +928,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -983,7 +983,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1038,7 +1038,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1093,7 +1093,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1148,7 +1148,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1203,7 +1203,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1258,7 +1258,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",
@@ -1409,7 +1409,7 @@
         "EphemeralStorage": {
           "Size": 512
         },
-        "Timeout": 5,
+        "Timeout": 60,
         "Environment": {
           "Variables": {
             "ARC_APP_NAME": "commandersalt-api",

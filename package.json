@@ -3,63 +3,16 @@
   "description": "EDH Salt Index API",
   "version": "0.0.0",
   "dependencies": {
-    "@adobe/react-spectrum": "^3.18.0",
-    "@reduxjs/toolkit": "^1.8.3",
-    "cors": "^2.8.5",
-    "cross-env": "^6.0.3",
-    "is-mobile": "^3.1.1",
-    "ismobilejs": "^1.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-full-height": "^1.2.3",
-    "react-redux": "^8.0.2"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --mode production",
-    "start": "cross-env NODE_ENV=dev webpack-dev-server --mode development --open --hot --compress",
-    "api": "cross-env NODE_ENV=testing ARC_LOCAL=1 npx sandbox",
-    "test": "cross-env NODE_ENV=testing PORT=6666 tape test/**/*-test.js test/*-test.js | tap-spec",
-    "serve": "run-s build api",
-    "dev": "webpack-cli serve --mode development",
-    "watch": "webpack --watch"
+    "build": "node --version"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
   "devDependencies": {
     "@architect/functions": "^5.1.0",
     "@architect/sandbox": "^5.2.4",
     "@architect/utils": "^3.1.2",
-    "@babel/preset-env": "^7.18.6",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/runtime": "^7.4.5",
-    "autoprefixer": "^10.4.7",
     "aws-sdk": "^2.1179.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^23.4.2",
-    "babel-loader": "^8.0.6",
-    "babel-preset-react": "^6.24.1",
-    "copy-webpack-plugin": "^5.1.1",
-    "core-js": "^2.6.5",
-    "cross-env": "^7.0.3",
     "crypto-js": "^4.1.1",
-    "css-loader": "3.0.0",
-    "eslint-loader": "^4.0.2",
-    "html-webpack-plugin": "^3.2.0",
-    "node-fetch": "^2.6.7",
-    "npm-run-all": "^4.1.5",
-    "run-waterfall": "^1.1.7",
-    "sass-loader": "^7.0.3",
-    "source-map-loader": "^1.1.2",
-    "style-loader": "^0.23.1",
-    "tap-spec": "^5.0.0",
-    "tape": "^5.5.3",
-    "tiny-json-http": "^7.4.2",
-    "webpack": "^4.24.0",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.14"
+    "node-fetch": "^2.6.7"
   }
 }

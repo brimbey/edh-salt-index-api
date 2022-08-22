@@ -50,11 +50,11 @@ const getSaltList = async (parameters) => {
         salt: parseFloat(parameters?.cursor?.salt)
       };
     } 
-    prettyPrintJSON(queryParams);
+    // prettyPrintJSON(queryParams);
 
     const results = await tables.data.query(queryParams);
 
-    prettyPrintJSON(results);
+    // prettyPrintJSON(results);
 
     return results;
   // } catch (error) {
@@ -67,7 +67,7 @@ const getSaltList = async (parameters) => {
 exports.handler = async function http(requestObject) {
   const params = getQueryStringParams(requestObject?.queryStringParameters);
   const list = await getSaltList(params);
-  console.log(`[api.get.commanders]: WHY`);
+  // console.log(`[api.get.commanders]: WHY`);
 
   return {
     headers: {

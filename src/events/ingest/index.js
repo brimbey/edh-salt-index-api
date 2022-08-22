@@ -1,10 +1,14 @@
-const Commanders = require("../../persist/commanders/Commanders");
 let arc = require('@architect/functions')
+const Commanders = require("./persist/commanders/Commanders");
+const Stats = require("./persist/stats/Stats");
+
+const prettyPrintJSON = (json, logType = 'INFO') => {
+    console.log(`[EVENTS.Ingest][${logType}]: \n${JSON.stringify(json, null, 4)}`);
+}
 
 exports.handler = arc.events.subscribe(async (payload, callback) => {
-    try {
-        Commanders.ingest(payload);
-    } catch (error) {
-        console.log(`[ERROR] - ingest queue failed: ${JSON.stringify(error)}`);
-    }
+    prettyPrintJSON(payload);
+
+    await Commanders.ingest(payload);
+    await Stats.ingest(payload);
 });

@@ -4,14 +4,11 @@ const prettyPrintJSON = (json) => {
   console.log(`${JSON.stringify(json, null, 4)}`);
 };
 
-const formatSalt = (value) => Math.ceil(value * 1000) / 1000;
-
 const getQueryStringParams = (parameters) => {
   const paramHash = {};
 
   if (parameters) {
     Object.keys(parameters).forEach((param) => {
-      // console.log(`got param ${param}, value: ${parameters[param]}`);
       let decoded = decodeURI(parameters[param]);
 
       if (param === `cursor`) {
@@ -31,16 +28,16 @@ const getSaltList = async (parameters) => {
   const tables = await arc.tables();
   const category = 'decks';
 
-  // prettyPrintJSON(parameters);
-
   try {
     const queryParams = {
       Limit: 50,
       IndexName: 'bySearch',
-      KeyConditionExpression: 'category = :category',// AND salt > :salt',
+      KeyConditionExpression: 'category = :category',
       ExpressionAttributeValues: {
         ':category': category,
-        // ':salt': 0,
+      },
+      ExpressionAttributeNames: {
+        '#node_search': "search",
       },
       ScanIndexForward: false,
     };
@@ -49,68 +46,49 @@ const getSaltList = async (parameters) => {
       queryParams.ExclusiveStartKey = {
         category: parameters?.cursor?.category,
         id: parameters?.cursor?.id,
-        salt: parseFloat(parameters?.cursor?.salt)
       };
     } 
 
-    if (parameters?.query || parameters?.sources) {
-      // queryParams.IndexName = 'bySearch';
-      queryParams.KeyConditionExpression = 'category = :category',
-      queryParams.ExpressionAttributeNames = {
-        '#node_search': "search",
+    let filterExpression = '';
+
+    if (parameters?.query) {
+      queryParams.ExpressionAttributeValues = {
+        ...queryParams.ExpressionAttributeValues,
+        ':queryString': `${parameters.query.toString().toUpperCase().trim()}`,
       };
 
-      queryParams.ExpressionAttributeValues = {
-        ':category': category,
+      filterExpression = `contains(#node_search.title, :queryString) OR contains(#node_search.commanders, :queryString) OR contains(#node_search.author, :queryString)`;
+    }
+    
+    const sourceList = (parameters?.sources && parameters?.sources?.trim() !== '') ? parameters?.sources?.split(`,`) : [];
+    let subFilterExpression = ``;
+
+    console.log(`SOURCES`);
+    prettyPrintJSON(parameters?.sources);
+    console.log(`LIST`);
+    prettyPrintJSON(sourceList);
+
+    for (let i = 0; i < sourceList.length; i++) {
+      const expressionAttributeValueName = `:sourceString${i}`;
+      queryParams.ExpressionAttributeValues[expressionAttributeValueName] = `${sourceList[i].toString().toUpperCase()}`;
+      
+      if (i > 0) {
+        subFilterExpression = `${subFilterExpression} OR `;
       }
 
-      let filterExpression = '';
-
-      if (parameters?.query) {
-        queryParams.ExpressionAttributeValues = {
-          ...queryParams.ExpressionAttributeValues,
-          ':queryString': `${parameters.query.toString().toUpperCase().trim()}`,
-        };
-
-        filterExpression = `contains(#node_search.title, :queryString) OR contains(#node_search.commanders, :queryString) OR contains(#node_search.author, :queryString)`;
-      }
-
-      if (parameters?.sources) {
-        const sourceList = parameters.sources.split(`,`);
-        let subFilterExpression = ``;
-
-        for (let i = 0; i < sourceList.length; i++) {
-          // console.log(`adding source: ${sourceList[i]}`);
-
-          const expressionAttributeValueName = `:sourceString${i}`;
-          queryParams.ExpressionAttributeValues[expressionAttributeValueName] = `${sourceList[i].toString().toUpperCase()}`;
-          
-          if (i > 0) {
-            subFilterExpression = `${subFilterExpression} OR `;
-          }
-
-          subFilterExpression = `${subFilterExpression} contains(#node_search.decksource, ${expressionAttributeValueName})`;
-        }
-
-        filterExpression = filterExpression ? `(${filterExpression}) AND (${subFilterExpression})` : `${subFilterExpression}`;
-      }
-
-      queryParams.FilterExpression = filterExpression;
+      subFilterExpression = `${subFilterExpression} contains(#node_search.decksource, ${expressionAttributeValueName})`;
     }
 
-    // prettyPrintJSON(queryParams);
+    filterExpression = filterExpression ? `(${filterExpression}) AND (${subFilterExpression})` : `${subFilterExpression}`;
 
-    // const results = await tables.data.query(queryParams);
-
-    // prettyPrintJSON(results);
+    queryParams.FilterExpression = filterExpression;
 
     return await tables.data.query(queryParams).then((data) => ({
       count: data.Count,
       items: data.Items.map((deck) => ({
-        // salt: formatSalt(deck.data.salt),
         ...deck,
         commanders: deck.commanders?.toString()?.replace(/(?<=[a-zA-Z]),(?=[a-zA-Z])/, `\n`),
-        search: {},
+        // search: {},
       })),
       lastEvaluatedKey: data.LastEvaluatedKey,
     }));

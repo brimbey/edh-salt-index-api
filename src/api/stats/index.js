@@ -26,7 +26,7 @@ const getStatsObject = async (cursor) => {
     };
 
     const results = await tables.data.query(queryParams);
-    console.log(`got stats!`);
+    // console.log(`got stats!`);
     // prettyPrintJSON(results);
     return results;
   } catch (error) {
